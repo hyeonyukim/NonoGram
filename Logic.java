@@ -48,20 +48,28 @@ class Menu extends JFrame implements ActionListener{
         setLayout(new BorderLayout());
         
         //JLabel title 생성, JFrame의 BorderLayout.NORTH에 add.
-        
+         JLabel title= new JLabel();
+	add(title, BorderLayout.NORTH);
         //JLabel scoreLabel 생성, JFrame의 BorderLayout.SOUTH에 add.
-        
+        JLabel scoreLabel= new JLabel();
+	add(scoreLabel, BorderLayout.SOUTH);
+		
         //JPanel menuBar 생성, GridLayout(3,3).
-        
+        JPanel menubar = new JPanel();
+	menubar.setLayout(new GridLayout(3,3);
+			  
         for(int i=0; i<9; i++) {
         	//JPanel buttonPanel[i]의 객체 생성, BorderLayout.
-        	
+        	JPanel buttonPanel[i]=new JPanel;
+		buttonPanel.setLayout(new BorderLayout);
         	//JButton stageButton[i]의 객체 생성, BorderLayout.CENTER에 add.
-        	
+        	JButton stageButton[i]=new JButton;
+		buttonPanel[i].add(stageButton[i].BorderLayout.CENTER);
         }
         //menuBar을 JFramedml BorderLayout.CENTER에 add.
-        
+        JFramedml.add(menubar, BorderLayout.CENTER);
 	}
+			  
 	public void actionPerformed(ActionEvent e) {
 		//slide2로 전환.
 		Logic.switchSlide();
