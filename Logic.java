@@ -51,6 +51,7 @@ class Menu extends JFrame implements ActionListener {
 	private int score=0; // 점수.
 	private JLabel title; // 게임 제목.
 	private JLabel scoreLabel; // 점수 표시창.
+	private JLabel scoreLabel2; // 점수 표시창.
 	private JLabel team; // 조 이름
 	private JPanel menuBar; // 메뉴를 담을 panel.
 	private JPanel buttonPanel[]; // 버튼을 담을 panel, button에 마진을 주기위해 사용.
@@ -81,11 +82,11 @@ class Menu extends JFrame implements ActionListener {
 		scorePanel = new JPanel();
 		scorePanel.setLayout(new GridLayout(2,1));
 		team = new JLabel("JAVA 프로그래밍 2조 - 최기락, 황정인, 김현유, 박종원");
-		scoreLabel = new JLabel("score : " + score);
+		scoreLabel2 = new JLabel("score : " + score);
 		scorePanel.add(team);
-		scorePanel.add(scoreLabel);
+		scorePanel.add(scoreLabel2);
 		team.setHorizontalAlignment(SwingConstants.CENTER);
-		scoreLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		scoreLabel2.setHorizontalAlignment(SwingConstants.CENTER);
 		scorePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
 		add(scorePanel, BorderLayout.SOUTH);
 
@@ -127,6 +128,7 @@ class Menu extends JFrame implements ActionListener {
 		stageButton[Logic.slide2.getStage()].setOpaque(true);
 		stageButton[Logic.slide2.getStage()].setBackground(Color.BLUE);
 		stageButton[Logic.slide2.getStage()].setText("Clear");
+		scoreLabel2.setText("score :" + score); 
 	}
 }
 
@@ -323,8 +325,10 @@ class Map extends JFrame {
 			int j = Integer.parseInt(e.getActionCommand()) % 10;
 			if (gridButton[i][j].getBackground() == Color.BLUE) {
 				gridButton[i][j].setBackground(null);
+				user[i][j]=0;
 			} else {
 				gridButton[i][j].setBackground(Color.BLUE);
+				user[i][j]=1;
 				// 버튼을 누를때 i랑 j값을 받아와서 해당하는 버튼의 색갈을 바꿀수 있게 해야함.
 				// 또한 user배열에 이 정보를 저장해야 함.
 			}
