@@ -16,15 +16,25 @@ import javax.swing.SwingConstants;
 public class Logic {
 	public static Menu slide1;
 	public static Map slide2;
+	public static Result slide3;
 
 	public static void main(String[] args) {
 		// 두 슬라이드 생성. 처음에는 slide1을 보이게 함.
 		slide1 = new Menu();
 		slide2 = new Map();
+		slide3 = new Result();
 		slide1.setVisible(true);
 		slide2.setVisible(false);
+		slide3.setVisible(false);
 	}
-
+	
+	public static void resultSlide() {
+		// 슬라이드를 바꿔서 보이게 함.
+		slide1.setVisible(false);
+		slide2.setVisible(false);
+		slide3.setVisible(true);
+	}
+	
 	public static void switchSlide() {
 		// 슬라이드를 바꿔서 보이게 함.
 		slide1.setVisible(slide1.isVisible() ? false : true);
@@ -38,7 +48,7 @@ class Menu extends JFrame implements ActionListener {
 	public static final int HEIGHT = 600;
 	// 변수.
 	private int clear[]; // 클리어(배열)
-	private int score; // 점수.
+	private int score=0; // 점수.
 	private JLabel title; // 게임 제목.
 	private JLabel scoreLabel; // 점수 표시창.
 	private JLabel team; // 조 이름
@@ -134,6 +144,7 @@ class Map extends JFrame {
 	private int hint[][]; // 맵 옆에 표시되는 힌트들의 정보를 담고 있는 배열.
 	private int stage; // 몇 스테이지인지 저장.
 	private JLabel stageLabel; // 제목란에 스테이지를 표시함.
+	private JLabel hintLabel[];
 	private JPanel mapPanel; // 게임 창을 담는 Panel.
 	private JPanel submitPanel; // submit 버튼을 담는 Panel.
 	private JPanel buttonPanel;
@@ -204,37 +215,36 @@ class Map extends JFrame {
 		menuBar.setLayout(new GridLayout(6, 6));
 
 		int hintcnt = 0;
+		hintLabel = new JLabel[10];
 		for (int i = 0; i < 6; i++) {
 			for (int j = 0; j < 6; j++) {
 				if (i == 0 && j == 0)
 					menuBar.add(new JLabel(""));
 				else if (i == 0) {
-					JLabel hintLabel;
 					if ((hint[stage][hintcnt] / 10) % 10 == 0) {
-						hintLabel = new JLabel("" + hint[stage][hintcnt] % 10);
+						hintLabel[hintcnt] = new JLabel("" + hint[stage][hintcnt] % 10);
 					} else if (hint[stage][hintcnt] / 100 == 0) {
-						hintLabel = new JLabel("<html>" + (hint[stage][hintcnt] / 10) % 10 + "<br>"
+						hintLabel[hintcnt] = new JLabel("<html>" + (hint[stage][hintcnt] / 10) % 10 + "<br>"
 								+ hint[stage][hintcnt] % 10 + "</html>");
 					} else {
-						hintLabel = new JLabel("<html>" + hint[stage][hintcnt] / 100 + "<br>"
+						hintLabel[hintcnt] = new JLabel("<html>" + hint[stage][hintcnt] / 100 + "<br>"
 								+ (hint[stage][hintcnt] / 10) % 10 + "<br>" + hint[stage][hintcnt] % 10 + "</html>");
 					}
-					hintLabel.setHorizontalAlignment(SwingConstants.CENTER);
-					menuBar.add(hintLabel);
+					hintLabel[hintcnt].setHorizontalAlignment(SwingConstants.CENTER);
+					menuBar.add(hintLabel[hintcnt]);
 					hintcnt++;
 				} else if (j == 0) {
-					JLabel hintLabel;
 					if ((hint[stage][hintcnt] / 10) % 10 == 0) {
-						hintLabel = new JLabel("" + hint[stage][hintcnt] % 10);
+						hintLabel[hintcnt] = new JLabel("" + hint[stage][hintcnt] % 10);
 					} else if (hint[stage][hintcnt] / 100 == 0) {
-						hintLabel = new JLabel("<html>" + (hint[stage][hintcnt] / 10) % 10 + " "
+						hintLabel[hintcnt] = new JLabel("<html>" + (hint[stage][hintcnt] / 10) % 10 + " "
 								+ hint[stage][hintcnt] % 10 + "</html>");
 					} else {
-						hintLabel = new JLabel("<html>" + hint[stage][hintcnt] / 100 + " "
+						hintLabel[hintcnt] = new JLabel("<html>" + hint[stage][hintcnt] / 100 + " "
 								+ (hint[stage][hintcnt] / 10) % 10 + " " + hint[stage][hintcnt] % 10 + "</html>");
 					}
-					hintLabel.setHorizontalAlignment(SwingConstants.CENTER);
-					menuBar.add(hintLabel);
+					hintLabel[hintcnt].setHorizontalAlignment(SwingConstants.CENTER);
+					menuBar.add(hintLabel[hintcnt]);
 					hintcnt++;
 				} else {
 					menuBar.add(gridButton[i - 1][j - 1]);
@@ -242,19 +252,6 @@ class Map extends JFrame {
 
 			}
 		}
-		// 여기서 쓰인 힌트가 의미하는 바가 무엇인가?
-
-		/*
-		 * buttonPanel=new JPanel(); buttonPanel.setLayout(new GridLayout(6,6));
-		 * 
-		 * for(int i=0;i<ROW;i++) { buttonLabel[i]=new JLabel[COL]; for(int
-		 * j=0;j<COL;j++) { buttonLabel[i][j]=new JLabel();
-		 * buttonLabel[i][j].add(gridButton[i][j]); buttonPanel.add(buttonLabel[i][j]);
-		 * } }
-		 * 
-		 * 
-		 * add(buttonPanel,BorderLayout.CENTER);
-		 */
 		add(menuBar, BorderLayout.CENTER);
 	}
 
@@ -269,6 +266,16 @@ class Map extends JFrame {
 	private boolean compareMap() {
 		// submit 버튼을 누르면 answer과 비교해서 정답인지 아닌지 비교.
 		// 정답이라면 slide1의 scoreAugment()실행
+		// 정답이라면 slide1의 scoreAugment() 실행
+		int i,j;
+			
+		for(i=0; i<ROW; i++) {
+			for(j=0; j<COL; j++)
+			{
+				if(answer[stage-1][i][j] != user[i][j])
+					return false;
+			}
+		}
 		return true;
 	}
 
@@ -276,7 +283,32 @@ class Map extends JFrame {
 		// slide1에서 2로 넘어올 때 stage정보를 설정해줌.
 		stage = s;
 		stageLabel.setText("==Stage " + stage + "==");
-
+		for(int hintcnt=0; hintcnt<5; hintcnt++) {
+			if ((hint[stage-1][hintcnt] / 10) % 10 == 0) {
+				hintLabel[hintcnt].setText("" + hint[stage-1][hintcnt] % 10);
+			}
+			else if (hint[stage-1][hintcnt] / 100 == 0) {
+				hintLabel[hintcnt].setText("<html>" + (hint[stage-1][hintcnt] / 10) % 10 + "<br>"
+						+ hint[stage-1][hintcnt] % 10 + "</html>");
+			}
+			else {
+				hintLabel[hintcnt].setText("<html>" + hint[stage-1][hintcnt] / 100 + "<br>"
+						+ (hint[stage-1][hintcnt] / 10) % 10 + "<br>" + hint[stage-1][hintcnt] % 10 + "</html>");
+			}
+		}
+		for(int hintcnt=5; hintcnt<10; hintcnt++) {
+			if ((hint[stage-1][hintcnt] / 10) % 10 == 0) {
+				hintLabel[hintcnt].setText("" + hint[stage-1][hintcnt] % 10);
+			}
+			else if (hint[stage-1][hintcnt] / 100 == 0) {
+				hintLabel[hintcnt].setText("<html>" + (hint[stage-1][hintcnt] / 10) % 10 + " "
+						+ hint[stage-1][hintcnt] % 10 + "</html>");
+			}
+			else {
+				hintLabel[hintcnt].setText("<html>" + hint[stage-1][hintcnt] / 100 + " "
+						+ (hint[stage-1][hintcnt] / 10) % 10 + " " + hint[stage-1][hintcnt] % 10 + "</html>");
+			}
+		}
 	}
 
 	public int getStage() {
@@ -298,7 +330,7 @@ class Map extends JFrame {
 			}
 		}
 	}
-
+	
 	private class Clear implements ActionListener {
 
 		@Override
@@ -309,16 +341,32 @@ class Map extends JFrame {
 	}
 
 	private class Submit implements ActionListener {
-
+		
+		
 		public void actionPerformed(ActionEvent e) {
 			// submit 버튼을 눌렀을 때 compareMap()을 실행해서
 
 			// slide1의 score을 바꿔줌.
 			if (compareMap()) {
 				Logic.slide1.scoreAugment();
-
+				userErase();
+				colorErase();
+				Logic.resultSlide();
 			}
 			// 점수를 맨처음 초기화면에서 부터 이 맵까지 사용할 수 있는 전역변수가 필요.
+			else
+			{
+				stageLabel.setText("Do it again!");
+			}
+			//점수를 맨처음 초기화면에서 부터 이 맵까지 사용할 수 있는 전역변수가 필요.
+		}
+
+		private void colorErase()
+		{
+			int i,j;
+			for(i=0; i<ROW; i++)
+				for(j=0; j<COL; j++)
+					gridButton[i][j].setBackground(null);
 		}
 
 	}
@@ -718,5 +766,45 @@ class Map extends JFrame {
 		hint[i][j++] = 11;
 		hint[i][j++] = 3;
 		// Smile
+	}
+}
+
+class Result extends JFrame implements ActionListener {
+	// 가로, 세로 길이에 대한 상수.
+	public static final int WIDTH = 400;
+	public static final int HEIGHT = 600;
+	// 변수.
+
+	private JLabel result; // 게임 제목.
+	private JPanel buttonPanel; // 버튼을 담을 panel, button에 마진을 주기위해 사용.
+	private JButton backButton; // 버튼.
+
+		// Clock
+	public Result() {
+		// JFrame 설정.
+		setSize(WIDTH, HEIGHT);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setTitle("네모네모 로직");
+		setLayout(new BorderLayout());
+
+		// Ribbon
+		// JLabel title 생성, JFrame의 BorderLayout.NORTH에 add.
+		result = new JLabel("Stage Clear!");
+		result.setFont(new Font(result.getFont().getName(), Font.PLAIN, 30));
+		result.setHorizontalAlignment(SwingConstants.CENTER);
+		result.setBorder(BorderFactory.createEmptyBorder(25,0,0,0));
+		add(result, BorderLayout.CENTER);
+
+		buttonPanel = new JPanel();
+		buttonPanel.add(backButton = new JButton("Back"));
+		backButton.addActionListener(this);
+		add(buttonPanel, BorderLayout.SOUTH);
+
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		// slide2로 전환.
+		Logic.slide1.setVisible(true);
+		Logic.slide3.setVisible(false);
 	}
 }
