@@ -72,8 +72,8 @@ class Menu extends JFrame implements ActionListener {
 		title.setBorder(BorderFactory.createEmptyBorder(25, 0, 0, 0));
 		add(title, BorderLayout.NORTH);
 
-		clear = new int[Map.MAX_STAGE];
-		for (int i = 0; i < Map.MAX_STAGE; i++) {
+		clear = new int[Map.MAX_STAGE+1];
+		for (int i = 1; i <= Map.MAX_STAGE; i++) {
 			clear[i] = 0;
 		}
 		
@@ -128,7 +128,8 @@ class Menu extends JFrame implements ActionListener {
 		stageButton[Logic.slide2.getStage()].setOpaque(true);
 		stageButton[Logic.slide2.getStage()].setBackground(Color.BLUE);
 		stageButton[Logic.slide2.getStage()].setText("Clear");
-		scoreLabel2.setText("score :" + score); 
+		scoreLabel2.setText("Score :" + score); 
+		scoreLabel.setText("잔여 스테이지 : "+ score + "/8");
 	}
 }
 
@@ -676,7 +677,7 @@ class Map extends JFrame {
 		i++;
 		j = 0;
 		hint[i][j++] = 2;
-		hint[i][j++] = 5;
+		hint[i][j++] = 1;
 		hint[i][j++] = 5;
 		hint[i][j++] = 1;
 		hint[i][j++] = 2;
@@ -704,15 +705,15 @@ class Map extends JFrame {
 		i++;
 		j = 0;
 		hint[i][j++] = 3;
-		hint[i][j++] = 11;
+		hint[i][j++] = 1;
 		hint[i][j++] = 5;
-		hint[i][j++] = 11;
+		hint[i][j++] = 1;
 		hint[i][j++] = 3;
 		hint[i][j++] = 111;
 		hint[i][j++] = 111;
 		hint[i][j++] = 5;
 		hint[i][j++] = 1;
-		hint[i][j++] = 3;
+		hint[i][j++] = 1;
 		// Fork
 
 		i++;
