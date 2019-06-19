@@ -128,8 +128,14 @@ class Menu extends JFrame implements ActionListener {
 		stageButton[Logic.slide2.getStage()].setOpaque(true);
 		stageButton[Logic.slide2.getStage()].setBackground(Color.BLUE);
 		stageButton[Logic.slide2.getStage()].setText("Clear");
-		scoreLabel2.setText("Score :" + score); 
-		scoreLabel.setText("잔여 스테이지 : "+ score + "/8");
+		if(score==8){
+			scoreLabel.setText("STAGE ALL CLEARED!!");
+			scoreLabel2.setText("STAGE ALL CLEARED!!");
+		}
+		else{
+			scoreLabel2.setText("Score :" + score); 
+			scoreLabel.setText("잔여 스테이지 : "+ score + "/8");
+		}
 	}
 }
 
