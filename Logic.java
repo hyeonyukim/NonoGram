@@ -116,6 +116,7 @@ class Menu extends JFrame implements ActionListener {
 		clear[Logic.slide2.getStage()] = 1;
 		stageButton[Logic.slide2.getStage()].setOpaque(true);
 		stageButton[Logic.slide2.getStage()].setBackground(Color.BLUE);
+		stageButton[Logic.slide2.getStage()].setText("Clear");
 	}
 }
 
