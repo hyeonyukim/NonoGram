@@ -29,7 +29,7 @@ public class Logic {
 	}
 	
 	public static void resultSlide() {
-		// 슬라이드를 바꿔서 보이게 함.
+		// slide3만 보이게 함.
 		slide1.setVisible(false);
 		slide2.setVisible(false);
 		slide3.setVisible(true);
@@ -46,7 +46,7 @@ class Menu extends JFrame implements ActionListener {
 	// 가로, 세로 길이에 대한 상수.
 	public static final int WIDTH = 400;
 	public static final int HEIGHT = 600;
-	// 변수.
+	
 	private int clear[]; // 클리어(배열)
 	private int score=0; // 점수.
 	private JLabel title; // 게임 제목.
@@ -54,7 +54,6 @@ class Menu extends JFrame implements ActionListener {
 	private JLabel scoreLabel2; // 점수 표시창.
 	private JLabel team; // 조 이름
 	private JPanel menuBar; // 메뉴를 담을 panel.
-	private JPanel buttonPanel[]; // 버튼을 담을 panel, button에 마진을 주기위해 사용.
 	private JPanel scorePanel; // 스코어 패널
 	private JButton stageButton[]; // 버튼.
 
@@ -72,12 +71,12 @@ class Menu extends JFrame implements ActionListener {
 		title.setBorder(BorderFactory.createEmptyBorder(25, 0, 0, 0));
 		add(title, BorderLayout.NORTH);
 
+		// clear한 stage 표시
 		clear = new int[Map.MAX_STAGE+1];
 		for (int i = 1; i <= Map.MAX_STAGE; i++) {
 			clear[i] = 0;
 		}
 		
-
 		// JLabel team 생성, JFrame의 BorderLayout.SOUTH에 add.
 		scorePanel = new JPanel();
 		scorePanel.setLayout(new GridLayout(2,1));
@@ -96,7 +95,7 @@ class Menu extends JFrame implements ActionListener {
 
 		stageButton = new JButton[3 * 3];
 		for (int i = 1; i < 9; i++) {
-			// JPanel buttonPanel[i]의 객체 생성, BorderLayout.
+			// JPanel stageButton[i]의 객체 생성, BorderLayout.
 			menuBar.add(stageButton[i] = new JButton("Stage" + i));
 			// JButton stageButton[i]의 객체 생성, BorderLayout.CENTER에 add.
 			stageButton[i].addActionListener(this);
@@ -123,18 +122,21 @@ class Menu extends JFrame implements ActionListener {
 	}
 
 	public void scoreAugment() {
+		//score, clear 관련 상태 관련 변환 및 출력
 		score++;
 		clear[Logic.slide2.getStage()] = 1;
 		stageButton[Logic.slide2.getStage()].setOpaque(true);
 		stageButton[Logic.slide2.getStage()].setBackground(Color.BLUE);
 		stageButton[Logic.slide2.getStage()].setText("Clear");
+		
 		if(score==8){
 			scoreLabel.setText("STAGE ALL CLEARED!!");
 			scoreLabel2.setText("STAGE ALL CLEARED!!");
 		}
 		else{
+			int remain =  Map.MAX_STAGE - score;
+			scoreLabel.setText("잔여 스테이지 : "+ remain + "/8");
 			scoreLabel2.setText("Score :" + score); 
-			scoreLabel.setText("잔여 스테이지 : "+ score + "/8");
 		}
 	}
 }
@@ -147,16 +149,13 @@ class Map extends JFrame {
 	public static final int ROW = 5;
 	public static final int COL = 5;
 
-	// 변수.
 	private int answer[][][]; // 각 스테이지에 대한 해답을 담고 있는 배열.
 	private int user[][]; // 스테이지에 대한 유저의 답을 담고 있는 배열.
 	private int hint[][]; // 맵 옆에 표시되는 힌트들의 정보를 담고 있는 배열.
 	private int stage; // 몇 스테이지인지 저장.
 	private JLabel stageLabel; // 제목란에 스테이지를 표시함.
-	private JLabel hintLabel[];
-	private JPanel mapPanel; // 게임 창을 담는 Panel.
+	private JLabel hintLabel[]; // 힌트 하나씩 표시
 	private JPanel submitPanel; // submit 버튼을 담는 Panel.
-	private JPanel buttonPanel;
 	private JButton gridButton[][]; // 게임 버튼.
 	private JButton submitButton; // 제출 버튼.
 	private JPanel menuBar; // 게임 버튼 및 힌트 담는 Panel.
@@ -265,7 +264,7 @@ class Map extends JFrame {
 	}
 
 	private void userErase() {
-		// TODO Auto-generated method stub
+		// 유저 입력값 초기화
 		for (int i = 0; i < ROW; i++) {
 			for (int j = 0; j < COL; j++)
 				user[i][j] = 0;
@@ -273,9 +272,8 @@ class Map extends JFrame {
 	}
 
 	private boolean compareMap() {
-		// submit 버튼을 누르면 answer과 비교해서 정답인지 아닌지 비교.
+		// answer과 비교해서 정답인지 아닌지 비교.
 		// 정답이라면 slide1의 scoreAugment()실행
-		// 정답이라면 slide1의 scoreAugment() 실행
 		int i,j;
 			
 		for(i=0; i<ROW; i++) {
@@ -292,6 +290,7 @@ class Map extends JFrame {
 		// slide1에서 2로 넘어올 때 stage정보를 설정해줌.
 		stage = s;
 		stageLabel.setText("==Stage " + stage + "==");
+		
 		for(int hintcnt=0; hintcnt<5; hintcnt++) {
 			if ((hint[stage-1][hintcnt] / 10) % 10 == 0) {
 				hintLabel[hintcnt].setText("" + hint[stage-1][hintcnt] % 10);
@@ -305,6 +304,7 @@ class Map extends JFrame {
 						+ (hint[stage-1][hintcnt] / 10) % 10 + "<br>" + hint[stage-1][hintcnt] % 10 + "</html>");
 			}
 		}
+		
 		for(int hintcnt=5; hintcnt<10; hintcnt++) {
 			if ((hint[stage-1][hintcnt] / 10) % 10 == 0) {
 				hintLabel[hintcnt].setText("" + hint[stage-1][hintcnt] % 10);
@@ -342,21 +342,11 @@ class Map extends JFrame {
 		}
 	}
 	
-	private class Clear implements ActionListener {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-
-		}
-
-	}
-
 	private class Submit implements ActionListener {
 		
 		
 		public void actionPerformed(ActionEvent e) {
 			// submit 버튼을 눌렀을 때 compareMap()을 실행해서
-
 			// slide1의 score을 바꿔줌.
 			if (compareMap()) {
 				Logic.slide1.scoreAugment();
@@ -369,7 +359,6 @@ class Map extends JFrame {
 			{
 				stageLabel.setText("Do it again!");
 			}
-			//점수를 맨처음 초기화면에서 부터 이 맵까지 사용할 수 있는 전역변수가 필요.
 		}
 
 		private void colorErase()
@@ -383,7 +372,7 @@ class Map extends JFrame {
 	}
 
 	private void answerInit() {
-		// TODO Auto-generated method stub
+		// 정답 입력
 		for (int i = 0; i < MAX_STAGE; i++) {
 			answer[i] = new int[ROW][COL];
 			for (int j = 0; j < ROW; j++) {
@@ -784,13 +773,11 @@ class Result extends JFrame implements ActionListener {
 	// 가로, 세로 길이에 대한 상수.
 	public static final int WIDTH = 400;
 	public static final int HEIGHT = 600;
-	// 변수.
 
 	private JLabel result; // 게임 제목.
 	private JPanel buttonPanel; // 버튼을 담을 panel, button에 마진을 주기위해 사용.
 	private JButton backButton; // 버튼.
 
-		// Clock
 	public Result() {
 		// JFrame 설정.
 		setSize(WIDTH, HEIGHT);
@@ -798,7 +785,6 @@ class Result extends JFrame implements ActionListener {
 		setTitle("네모네모 로직");
 		setLayout(new BorderLayout());
 
-		// Ribbon
 		// JLabel title 생성, JFrame의 BorderLayout.NORTH에 add.
 		result = new JLabel("Stage Clear!");
 		result.setFont(new Font(result.getFont().getName(), Font.PLAIN, 30));
