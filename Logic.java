@@ -72,7 +72,7 @@ class Menu extends JFrame implements ActionListener {
 		add(team, BorderLayout.SOUTH);
 
 		// JPanel menuBar 생성, GridLayout(3,3).
-		JPanel menuBar = new JPanel();
+		menuBar = new JPanel();
 		menuBar.setLayout(new GridLayout(3, 3));
 
 		stageButton = new JButton[3 * 3];
@@ -83,6 +83,12 @@ class Menu extends JFrame implements ActionListener {
 			stageButton[i].addActionListener(this);
 			stageButton[i].setActionCommand(i+"");
 		}
+		
+		scoreLabel = new JLabel();
+		scoreLabel.setText("Choose stage!"); // 초기 화면. 점수 나면 score 표시
+		scoreLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		menuBar.add(scoreLabel);
+		
 		// menuBar을 JFramedml BorderLayout.CENTER에 add.
 		menuBar.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
 		this.add(menuBar, BorderLayout.CENTER);
@@ -119,6 +125,7 @@ class Map extends JFrame {
 	private JPanel buttonPanel;
 	private JButton gridButton[][]; // 게임 버튼.
 	private JButton submitButton; // 제출 버튼.
+	private JPanel menuBar; // 게임 버튼 및 힌트 담는 Panel.
 
 	public Map() {
 		// JFrame 설정.
@@ -160,17 +167,17 @@ class Map extends JFrame {
 		}
 
 		// JLabel stageLabel 생성, JFrame의 BorderLayout.NORTH에 add.
-		stageLabel = new JLabel("==Stage "+stage+"==");
+		stageLabel = new JLabel();
 		stageLabel.setFont(new Font(stageLabel.getFont().getName(), Font.PLAIN, 20));
 		stageLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		stageLabel.setBorder(BorderFactory.createEmptyBorder(20,0,0,0));
 		add(stageLabel, BorderLayout.NORTH);
 		
 		// JPanel submitPanel 생성, BorderLayout.
-		JPanel submitPanel = new JPanel();
+		submitPanel = new JPanel();
 		
 		// JButton submitButton 생성. submitPanel에 add.
-		JButton submitButton= new JButton("Submit");
+		submitButton= new JButton("Submit");
 		submitButton.addActionListener(new Submit());
 		submitButton.setPreferredSize(new Dimension(300, 45));
 		submitPanel.add(submitButton);
@@ -179,7 +186,7 @@ class Map extends JFrame {
 		add(submitPanel, BorderLayout.SOUTH);
 
 		// JPanel menuBar 생성, GridLayout(6,6).
-		JPanel menuBar = new JPanel();
+		menuBar = new JPanel();
 		menuBar.setLayout(new GridLayout(6, 6));
 		
 		int hintcnt = 0;
